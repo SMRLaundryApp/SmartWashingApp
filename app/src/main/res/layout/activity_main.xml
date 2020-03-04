@@ -94,14 +94,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
+        <TextView
             android:id="@+id/statusCodeTxt"
             android:layout_width="95dp"
             android:layout_height="27dp"
             android:layout_marginStart="44dp"
-            android:ems="10"
-            android:enabled="false"
-            android:inputType="numberDecimal"
+            android:text="-"
             app:layout_constraintStart_toEndOf="@+id/textView2"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -151,6 +149,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:onClick="clothesBtn1OnClick"
             android:text="Clothes 1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
