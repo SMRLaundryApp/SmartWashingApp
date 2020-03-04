@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView washingTypeTxt; //washingTypeTxt
     private TextView receiveDataTxt; //receiveDataTxt
     private TextView statusCodeTxt; //statusCodeTxt
+    private Retrofit retrofit;
 
     JsonPlaceHolderApi jsonPlaceHolderApi;
 
@@ -33,24 +34,26 @@ public class MainActivity extends AppCompatActivity {
         receiveDataTxt = findViewById(R.id.receiveDataTxt);
         statusCodeTxt = findViewById(R.id.statusCodeTxt);
 
-
-    }
-
-    public void clothesBtn1OnClick(View view) {
-        System.out.println("Clothes button 1 pressed");
-        getWashingProgramOld();
-
-    }
-
-    public void getWashingProgramOld() {
-        Retrofit retrofit = new Retrofit.Builder()
+        retrofit = new Retrofit.Builder()
                 .baseUrl("https://jordyu.nl/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+        jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+    }
 
-        Call<List<Post>> call = jsonPlaceHolderApi.getPosts();
+    public void clothesBtn1OnClick(View view) {
+        System.out.println("Clothes button 1 pressed");
+        //getWashingProgramOld();
+        getWashingProgram(1);
+
+    }
+
+    public void getWashingProgram(int imageId) {
+
+        Call<List<Post>> call;
+        call = jsonPlaceHolderApi.washProgram(imageId);
+
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
@@ -62,6 +65,48 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 List<Post> posts = response.body();
+
+                receiveDataTxt.setText("");
+
+                for (Post post : posts) {
+                    String content = "";
+                    content += "ID: " + post.getId() + "\n";
+                    content += "Temperature: " + post.getTemperature() + "\n";
+                    content += "Washing type: " + post.getWashingType() + "\n\n";
+                    receiveDataTxt.append(content);
+                    System.out.println(content);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Post>> call, Throwable t) {
+                System.out.println("ERROR");
+                receiveDataTxt.setText(t.getMessage());
+                System.out.println(t.getMessage());
+
+            }
+        });
+    }
+
+    public void getWashingProgramOld() {
+
+
+        Call<List<Post>> call = jsonPlaceHolderApi.getPosts();
+        call.enqueue(new Callback<List<Post>>() {
+            @Override
+            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+                int responseCode = response.code(); //Show response code
+                statusCodeTxt.setText(Integer.toString(responseCode));
+                System.out.println(response.body());
+                if (!response.isSuccessful()) { // if responseCode is not in 200-299
+
+                    return;
+                }
+
+                List<Post> posts = response.body();
+
+                receiveDataTxt.setText("");
 
                 for (Post post : posts) {
                     String content = "";
@@ -76,10 +121,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
                 receiveDataTxt.setText(t.getMessage());
+                System.out.println("ON FAILURE:");
+                System.out.println(t.getMessage());
 
             }
         });
 
     }
 
+    public void clothesBtn2OnClick(View view) {
+        System.out.println("Clothes button 2 pressed");
+        getWashingProgram(2);
+    }
+
+    public void clothesBtn3OnClick(View view) {
+        System.out.println("Clothes button 3 pressed");
+        getWashingProgram(3);
+    }
 }
