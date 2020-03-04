@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView receiveDataTxt; //receiveDataTxt
     private TextView statusCodeTxt; //statusCodeTxt
 
+    JsonPlaceHolderApi jsonPlaceHolderApi;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +38,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void clothesBtn1OnClick(View view) {
         System.out.println("Clothes button 1 pressed");
+        getWashingProgramOld();
 
+    }
+
+    public void getWashingProgramOld() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://jordyu.nl/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -73,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
 }
